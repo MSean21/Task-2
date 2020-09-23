@@ -1,0 +1,107 @@
+# Necessary Import statements to simulate the Quantum Circuit, use IBM Quantum Experience, and implement through Jupyter NoteBook - Qbraid  
+from qiskit import QuantumCircuit
+from qiskit import execute, Aer, IBMQ
+from qiskit.compiler import transpile, assemble
+from qiskit.tools.jupyter import *
+from qiskit.visualization import *
+
+# Loads IBM Q account(s)
+IBMQ.save_account("93ed3f3e180fe94dcc0a8c80a1939439ab992d5991eb7138a0c3011ea7bb158f4283565242d715c5bbe026d9f225c724b4fcf470b9cda650d5971a393ab7326d", overwrite=True) # My IBM Quantum API Token 
+IBMQ.load_account()
+provider = IBMQ.get_provider(hub='ibm-q-education', group='tcs-karamlou', project='summer-2020') #Provider from the Coding School - Quantum Camp over this summer
+
+# Creates a new Quantum Circuit
+circuit = QuantumCircuit(2, 2)
+
+# Adds a Hadamard gate on qubit 0
+# Even though instructions say that RX,RY and CNOT are ONLY allowed, this is necessary to parametrize the qubit to a random state each time the simulation is run
+circuit.h(0)
+
+# Adds a CNOT gate on control qubit 0 and target qubit 1
+circuit.cx(0, 1)
+
+#Adds a RX/Pauli X gate on control qubit 1
+circuit.x(1)
+
+# Maps the quantum measurement to the classical bits
+circuit.measure([0,1], [0,1])
+
+#Creates blank arrays for various shots (at 1000,100,10 and 1)
+count1000 = [];
+count100 = [];
+count10 = [];
+count1 = [];
+
+
+#Runs the Quantum Simulation for 1000 shots, 5 times 
+for x in range(5):
+    # Use Aer's qasm_simulator
+    simulator = Aer.get_backend('qasm_simulator')
+    # Execute the circuit on the qasm simulator
+    job = execute(circuit, simulator, shots= 1000)
+    # Gets results from the job
+    result = job.result()
+    # Receives counts for current round of simulation
+    counts = result.get_counts(circuit)
+    # Saves results to the respective array
+    count1000.append(counts)
+
+#Runs the Quantum Simulation for 100 shots, 5 times 
+for x in range(5):
+    # Use Aer's qasm_simulator
+    simulator = Aer.get_backend('qasm_simulator')
+    # Execute the circuit on the qasm simulator
+    job = execute(circuit, simulator, shots= 100)
+    # Gets results from the job
+    result = job.result()
+    # Receives counts for current round of simulation
+    counts = result.get_counts(circuit)
+    # Saves results to the respective array
+    count100.append(counts)
+
+
+#Runs the Quantum Simulation for 10 shots, 5 times 
+for x in range(5):
+    # Use Aer's qasm_simulator
+    simulator = Aer.get_backend('qasm_simulator')
+    # Execute the circuit on the qasm simulator
+    job = execute(circuit, simulator, shots= 10)
+    # Get results from the job
+    result = job.result()
+    # Receives counts for current round of simulation
+    counts = result.get_counts(circuit)
+    # Saves results to the respective array
+    count10.append(counts)
+
+#Runs the Quantum Simulation for 1 shot, 4 times
+#NOTE: A range 4 was chosen this time to highlight the TRUE 50/50 nature of the 10 and 01 qubit states 
+for x in range(4):
+    # Use Aer's qasm_simulator
+    simulator = Aer.get_backend('qasm_simulator')
+    # Execute the circuit on the qasm simulator
+    job = execute(circuit, simulator, shots= 1)
+    # Get results from the job
+    result = job.result()
+    # Receives counts for current round of simulation
+    counts = result.get_counts(circuit)
+    # Saves results to the respective array
+    count1.append(counts)
+
+#Prints out the results after running the simulation and the values saved in the respective arrays
+print("\nTotal Count for 10 and 01 in 1000 shots are = ", count1000)
+print("\nTotal Count for 10 and 01 in 100 shots are = ", count100)
+print("\nTotal Count for 10 and 01 in 10 shots are = ", count10)
+print("\nTotal Count for 10 and 01 in 1 shot are = ", count1)
+
+
+# The below line of code draws the circuit used to get to the above results
+circuit.draw()
+
+# RESOURCES USED FOR ADDITIONAL INFORMATION/READING:
+# https://quantumcomputing.stackexchange.com/questions/2258/how-to-implement-the-4-bell-states-on-the-ibm-q-composer
+# https://qiskit.org/textbook/ch-states/single-qubit-gates.html
+# https://qiskit.org/documentation/getting_started.html
+# http://web.mit.edu/2.111/www/2010/ps4solution.pdf
+# https://cs.stackexchange.com/questions/63859/intuition-behind-the-hadamard-gate
+# https://cirq.readthedocs.io/en/stable/simulation.html
+# https://quantum-computing.ibm.com/
