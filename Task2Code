@@ -6,9 +6,9 @@ from qiskit.tools.jupyter import *
 from qiskit.visualization import *
 
 # Loads IBM Q account(s)
-IBMQ.save_account("93ed3f3e180fe94dcc0a8c80a1939439ab992d5991eb7138a0c3011ea7bb158f4283565242d715c5bbe026d9f225c724b4fcf470b9cda650d5971a393ab7326d", overwrite=True) # My IBM Quantum API Token 
+IBMQ.save_account("IBMQ API Token", overwrite=True) # My IBM Quantum API Token 
 IBMQ.load_account()
-provider = IBMQ.get_provider(hub='ibm-q-education', group='tcs-karamlou', project='summer-2020') #Provider from the Coding School - Quantum Camp over this summer
+provider = IBMQ.get_provider() #Provider from the Coding School - Quantum Camp over this summer
 
 # Creates a new Quantum Circuit
 circuit = QuantumCircuit(2, 2)
